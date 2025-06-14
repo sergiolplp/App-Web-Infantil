@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <link rel="icon" href="./icon.ico" type="image/x-icon">
   <link rel="apple-touch-icon" href="./icon.ico">
+  <!-- CSS -->
   <style>
     body {
       font-family: 'Fredoka', sans-serif;
@@ -103,8 +104,11 @@
   </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet">
+  <!-- FIN CSS -->
 </head>
+  <!-- HTML -->
 <body>
+          <!-- pagina home -->
   <div class="container" id="welcome-screen">
     <h1>🐾 ¡Luci, Sofi... a jugar con las matemáticas! 🦄</h1>
     <div class="character-row">
@@ -114,7 +118,7 @@
     <button onclick="showMenu()">¡Empezar a jugar!</button>
     <button onclick="showHelp()">¿Cómo se resuelve?</button>
   </div>
-
+        <!-- pagina selección de nombre (modificar e incorporar que ellos escriban su nombre) -->
   <div class="container hidden" id="select-user-screen">
   <h2>¿Quién va a jugar?</h2>
   <button onclick="selectUser('Lucía')">Lucía</button>
@@ -126,7 +130,9 @@
   <br>
   <button class="volver-btn" onclick="goToWelcome()">Volver</button>
 </div>
+        <!-- acá falta pàgina de selección de Asignatura ¿Que te gustaría practicar hoy? -->
 
+  
   <div class="container hidden" id="menu-screen">
     <h2 id="saludo-usuario">Elegí una operación</h2>
     <button onclick="startGame('+')">➕ Suma</button>
@@ -173,6 +179,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
   
   <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+  <!-- SCRIPT -->
 <script>
   let currentOperator = '+';
   let correctAnswer = 0;
@@ -182,12 +189,11 @@
   const aciertosParaSubirNivel = 10;
   const jsConfetti = new JSConfetti();
 
-  // Agrega esta línea a tu objeto de sonidos
 const sounds = {
   correct: new Howl({ src: ['./correct.wav'] }),
   wrong: new Howl({ src: ['./wrong.wav'] }),
   click: new Howl({ src: ['./click.wav'] }),
-  levelUp: new Howl({ src: ['./level-up.m4a'] }) // Asegúrate de que el nombre coincida con tu archivo
+  levelUp: new Howl({ src: ['./level-up.m4a'] })
 };
 
   function showMenu() {
