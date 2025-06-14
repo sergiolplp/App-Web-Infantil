@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mathimals - Portal Educativo</title>
+  <title>Portal Educativo</title>
   <style>
     body {
       font-family: 'Comic Sans MS', cursive, sans-serif;
@@ -55,7 +55,7 @@
 </head>
 <body>
 
-  <h1>¡Luci, Sofi... a jugar con ejercicios educativos!</h1>
+  <h1>¡A jugar con ejercicios educativos!</h1>
 
   <div class="img-container">
     <img src="img/carpincho.png" alt="Carpincho" />
@@ -82,42 +82,57 @@
   </div>
 
   <div id="footer">
-    © 2025 - Mathimals. Hecho con ♥ para aprender jugando.
+    Desarrolado por SDS. Donaciones a ALIAS: sdsproyectos
   </div>
 
   <script>
-    const startButton = document.getElementById("startButton");
-    const nameSection = document.getElementById("nameSection");
-    const menuSection = document.getElementById("menuSection");
-    const welcomeText = document.getElementById("welcomeText");
+  const startButton = document.getElementById("startButton");
+  const nameSection = document.getElementById("nameSection");
+  const menuSection = document.getElementById("menuSection");
+  const welcomeText = document.getElementById("welcomeText");
 
-    function saveName() {
-      const name = document.getElementById("playerName").value.trim();
-      if (name !== "") {
-        localStorage.setItem("nombreJugador", name);
-        welcomeText.innerText = `¡Bienvenido/a, ${name}! Elige qué te gustaría practicar`;
-        nameSection.style.display = "none";
-        menuSection.style.display = "block";
-      }
-    }
+  // 🎵 Cargar sonidos desde carpeta /sounds/
+  const sonidoClick = new Audio("sounds/click.wav");
+  const sonidoCorrecto = new Audio("sounds/correct.wav");
+  const sonidoIncorrecto = new Audio("sounds/wrong.wav");
+  const sonidoLevelUp = new Audio("sounds/level-up.wav");
 
-    function goTo(seccion) {
-      // Esto se puede modificar para redirigir según sección
-      alert(`Vamos a la sección: ${seccion}`);
-      // window.location.href = `${seccion}.html`; <-- se activa cuando estén listas las subpáginas
-    }
+  startButton.addEventListener("click", () => {
+    startButton.style.display = "none";
+    nameSection.style.display = "block";
+    sonidoClick.play();
+  });
 
-    function goBack() {
-      menuSection.style.display = "none";
+  function saveName() {
+    const name = document.getElementById("playerName").value.trim();
+    if (name !== "") {
+      localStorage.setItem("nombreJugador", name);
+      welcomeText.innerText = `¡Bienvenido/a, ${name}! Elige qué te gustaría practicar`;
       nameSection.style.display = "none";
-      startButton.style.display = "inline-block";
+      menuSection.style.display = "block";
+      sonidoCorrecto.play(); // sonido de bienvenida tipo "acierto"
+    } else {
+      sonidoIncorrecto.play(); // si el nombre está vacío
     }
+  }
 
-    startButton.addEventListener("click", () => {
-      startButton.style.display = "none";
-      nameSection.style.display = "block";
-    });
-  </script>
+  function goTo(seccion) {
+    sonidoClick.play();
+    alert(`Vamos a la sección: ${seccion}`);
+    // window.location.href = `${seccion}.html`;
+  }
+
+  function goBack() {
+    sonidoClick.play();
+    menuSection.style.display = "none";
+    nameSection.style.display = "none";
+    startButton.style.display = "inline-block";
+  }
+
+  // Ejemplo: para usar sonidoLevelUp cuando suba de nivel:
+  // sonidoLevelUp.play();
+</script>
+
 
 </body>
 </html>
