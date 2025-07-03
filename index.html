@@ -142,12 +142,9 @@
       }
     }
 
-    function goTo(seccion) {
-      sonidoClick.play();
-      alert(`Vamos a la sección: ${seccion}`);
-      // window.location.href = `${seccion}.html`;
-    }
-
+function goTo(seccion) {
+  window.location.href = `${seccion}.html`;
+}
     function goBack() {
       sonidoClick.play();
       menuSection.style.display = "none";
