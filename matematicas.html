@@ -3,21 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Matemáticas</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet">
+  <title>MATEMÁTICAS</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap">
   <style>
     body {
       font-family: 'Fredoka', sans-serif;
-      text-transform: uppercase;
       background-color: #fff8f0;
       text-align: center;
       margin: 0;
       padding: 0;
+      text-transform: uppercase;
     }
-    h1 {
+    h1, h2, p {
       color: #663399;
-      margin: 20px 10px;
-      font-size: 1.8em;
+      margin-top: 20px;
     }
     .button {
       background-color: #ff69b4;
@@ -36,7 +35,37 @@
       background-color: orange;
       color: white;
     }
-    .footer {
+    .hidden {
+      display: none;
+    }
+    .answer-btn {
+      display: block;
+      margin: 10px auto;
+      width: 80%;
+    }
+    #feedback {
+      font-size: 20px;
+      height: 2em;
+      margin: 10px;
+    }
+    #nivel-container {
+      width: 80%;
+      margin: 10px auto;
+      text-align: center;
+    }
+    .barra-nivel {
+      background-color: #ddd;
+      border-radius: 20px;
+      height: 20px;
+      overflow: hidden;
+    }
+    #nivel-barra {
+      height: 100%;
+      width: 0%;
+      background-color: #8bc34a;
+      transition: width 0.4s ease-in-out;
+    }
+    footer {
       background-color: #ffc1e3;
       color: #333;
       text-align: center;
@@ -46,101 +75,171 @@
       position: fixed;
       bottom: 0;
       width: 100%;
-      z-index: 999;
-    }
-    /* Barra de nivel */
-    #nivel-container {
-      width: 80%;
-      margin: 20px auto;
-      text-align: center;
-    }
-    .barra-nivel {
-      background-color: #ddd;
-      border-radius: 20px;
-      height: 20px;
-      overflow: hidden;
-      margin-top: 5px;
-    }
-    #nivel-barra {
-      height: 100%;
-      width: 0%;
-      background-color: #8bc34a;
-      transition: width 0.4s ease-in-out;
-    }
-    #puntaje-texto {
-      margin-top: 10px;
-      font-size: 1em;
     }
   </style>
 </head>
 <body>
 
-  <h1 id="titulo">Cargando...</h1>
+  <h1 id="titulo">¡PRACTIQUEMOS MATEMÁTICAS!</h1>
 
-  <div id="nivel-container">
-    <p id="puntaje-texto">Nivel: 1 | Respuestas correctas: 0</p>
-    <div class="barra-nivel">
-      <div id="nivel-barra"></div>
+  <div id="menu-operaciones">
+    <button class="button" onclick="seleccionarOperacion('+')">➕ SUMA</button><br>
+    <button class="button" onclick="seleccionarOperacion('-')">➖ RESTA</button><br>
+    <button class="button" onclick="seleccionarOperacion('*')">✖️ MULTIPLICACIÓN</button><br>
+    <button class="button" onclick="seleccionarOperacion('/')">➗ DIVISIÓN</button><br>
+    <button class="button" onclick="mostrarAyuda()">¿CÓMO SE RESUELVE?</button><br>
+    <button class="button orange-button" onclick="volver()">VOLVER</button>
+  </div>
+
+  <div id="juego" class="hidden">
+    <h2 id="pregunta"></h2>
+
+    <div id="nivel-container">
+      <p>NIVEL: <span id="nivel-numero">1</span></p>
+      <div class="barra-nivel">
+        <div id="nivel-barra"></div>
+      </div>
     </div>
+
+    <div id="respuestas"></div>
+    <p id="feedback"></p>
+    <button class="button orange-button" onclick="volverAlMenu()">VOLVER</button>
   </div>
 
-  <!-- Contenido principal de la materia -->
-  <div id="contenido">
-    <!-- Aquí podés agregar los ejercicios o botones -->
-    <p>Contenido de la asignatura...</p>
+  <div id="ayuda" class="hidden">
+    <h2>¿CÓMO SE RESUELVE?</h2>
+    <div id="texto-ayuda" style="margin: 20px; font-size: 1.2rem;"></div>
+    <button class="button" onclick="explicacion('+')">SUMA</button>
+    <button class="button" onclick="explicacion('-')">RESTA</button>
+    <button class="button" onclick="explicacion('*')">MULTIPLICACIÓN</button>
+    <button class="button" onclick="explicacion('/')">DIVISIÓN</button><br><br>
+    <button class="button orange-button" onclick="volver()">VOLVER</button>
   </div>
 
-  <button class="button orange-button" onclick="volver()">Volver</button>
-
-  <div class="footer">
-    Desarrollado por SDS. Donaciones a ALIAS: sdsproyectos
-  </div>
-
-  <!-- SONIDOS -->
-  <script>
-    const clickSound = new Audio("sounds/click.wav");
-    const correctSound = new Audio("sounds/correct.wav");
-    const wrongSound = new Audio("sounds/wrong.wav");
-    const levelUpSound = new Audio("sounds/level-up.wav");
-  </script>
+  <footer>
+    DESARROLLADO POR SDS. DONACIONES A ALIAS: SDSPROYECTOS
+  </footer>
 
   <script>
-    // CONFIGURACIÓN
-    const materia = "MATEMÁTICAS"; // CAMBIAR según el archivo
+    const sonidoClick = new Audio("sounds/click.wav");
+    const sonidoCorrecto = new Audio("sounds/correct.wav");
+    const sonidoIncorrecto = new Audio("sounds/wrong.wav");
+    const sonidoLevelUp = new Audio("sounds/level-up.wav");
 
-    const nombre = localStorage.getItem("nombreJugador") || "AMIGO/A";
-    document.getElementById("titulo").innerText = `¡${nombre.toUpperCase()}! PRACTIQUEMOS ${materia}`;
+    let nivel = 1;
+    let puntaje = 0;
+    let operacionActual = "";
 
-    // NIVEL
-    let puntaje = parseInt(localStorage.getItem(`puntaje_${nombre}_${materia}`)) || 0;
-    let nivel = parseInt(localStorage.getItem(`nivel_${nombre}_${materia}`)) || 1;
-
-    function actualizarBarra() {
-      const porcentaje = Math.min(100, (puntaje % 10) * 10);
-      document.getElementById("nivel-barra").style.width = porcentaje + "%";
-      document.getElementById("puntaje-texto").innerText = `Nivel: ${nivel} | Respuestas correctas: ${puntaje}`;
-    }
-
-    function sumarPunto() {
-      puntaje++;
-      if (puntaje % 10 === 0) {
-        nivel++;
-        levelUpSound.play();
-      } else {
-        correctSound.play();
-      }
-      localStorage.setItem(`puntaje_${nombre}_${materia}`, puntaje);
-      localStorage.setItem(`nivel_${nombre}_${materia}`, nivel);
-      actualizarBarra();
+    function seleccionarOperacion(op) {
+      sonidoClick.play();
+      operacionActual = op;
+      document.getElementById("menu-operaciones").classList.add("hidden");
+      document.getElementById("juego").classList.remove("hidden");
+      siguientePregunta();
     }
 
     function volver() {
-      clickSound.play();
-      window.location.href = "index.html";
+      sonidoClick.play();
+      window.location.href = "index.html"; // o el nombre correcto de tu home
     }
 
-    actualizarBarra();
-  </script>
+    function volverAlMenu() {
+      sonidoClick.play();
+      document.getElementById("juego").classList.add("hidden");
+      document.getElementById("menu-operaciones").classList.remove("hidden");
+    }
 
+    function mostrarAyuda() {
+      sonidoClick.play();
+      document.getElementById("menu-operaciones").classList.add("hidden");
+      document.getElementById("ayuda").classList.remove("hidden");
+    }
+
+    function explicacion(op) {
+      const textos = {
+        "+": "SUMAR ES JUNTAR DOS NÚMEROS. POR EJEMPLO: 2 + 3 = 5.",
+        "-": "RESTAR ES SACAR UNA CANTIDAD A OTRA. POR EJEMPLO: 5 - 2 = 3.",
+        "*": "MULTIPLICAR ES SUMAR VARIAS VECES. 2 x 3 ES 2 + 2 + 2 = 6.",
+        "/": "DIVIDIR ES REPARTIR EN PARTES IGUALES. 6 ÷ 2 = 3."
+      };
+      document.getElementById("texto-ayuda").innerText = textos[op];
+    }
+
+    function siguientePregunta() {
+      const a = Math.floor(Math.random() * 10 + 1);
+      const b = Math.floor(Math.random() * 10 + 1);
+      let pregunta, resultado;
+
+      switch (operacionActual) {
+        case '+':
+          resultado = a + b;
+          pregunta = `${a} + ${b}`;
+          break;
+        case '-':
+          resultado = a - b;
+          pregunta = `${a} - ${b}`;
+          break;
+        case '*':
+          resultado = a * b;
+          pregunta = `${a} x ${b}`;
+          break;
+        case '/':
+          resultado = a;
+          pregunta = `${a * b} ÷ ${b}`;
+          break;
+      }
+
+      document.getElementById("pregunta").innerText = `¿CUÁNTO ES ${pregunta}?`;
+      const respuestas = generarOpciones(resultado);
+      mostrarRespuestas(respuestas, resultado);
+    }
+
+    function generarOpciones(correcta) {
+      const opciones = new Set();
+      opciones.add(correcta);
+      while (opciones.size < 4) {
+        opciones.add(correcta + Math.floor(Math.random() * 10 - 5));
+      }
+      return Array.from(opciones).sort(() => Math.random() - 0.5);
+    }
+
+    function mostrarRespuestas(opciones, correcta) {
+      const cont = document.getElementById("respuestas");
+      cont.innerHTML = "";
+      opciones.forEach(op => {
+        const btn = document.createElement("button");
+        btn.className = "button answer-btn";
+        btn.textContent = op;
+        btn.onclick = () => verificarRespuesta(op, correcta);
+        cont.appendChild(btn);
+      });
+    }
+
+    function verificarRespuesta(opcion, correcta) {
+      const feedback = document.getElementById("feedback");
+      if (opcion === correcta) {
+        feedback.innerText = "¡MUY BIEN!";
+        sonidoCorrecto.play();
+        puntaje++;
+        if (puntaje % 10 === 0) {
+          nivel++;
+          sonidoLevelUp.play();
+        }
+      } else {
+        feedback.innerText = "¡UPS! ESA NO ES.";
+        sonidoIncorrecto.play();
+      }
+      actualizarBarra();
+      setTimeout(siguientePregunta, 1000);
+    }
+
+    function actualizarBarra() {
+      const barra = document.getElementById("nivel-barra");
+      const nivelNum = document.getElementById("nivel-numero");
+      const porcentaje = Math.min(100, (puntaje % 10) * 10);
+      barra.style.width = porcentaje + "%";
+      nivelNum.textContent = nivel;
+    }
+  </script>
 </body>
 </html>
