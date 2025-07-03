@@ -55,9 +55,9 @@
 </head>
 <body>
 
-  <h1>¡A jugar con ejercicios educativos!</h1>
+  <h1 id="mainTitle">¡A jugar con ejercicios educativos!</h1>
 
-  <div class="img-container">
+  <div class="img-container" id="mainImages">
     <img src="img/carpincho.png" alt="Carpincho" />
     <img src="img/unicornio.png" alt="Unicornio" />
   </div>
@@ -90,6 +90,8 @@
   const nameSection = document.getElementById("nameSection");
   const menuSection = document.getElementById("menuSection");
   const welcomeText = document.getElementById("welcomeText");
+  const mainTitle = document.getElementById("mainTitle");
+  const mainImages = document.getElementById("mainImages");
 
   // 🎵 Cargar sonidos desde carpeta /sounds/
   const sonidoClick = new Audio("sounds/click.wav");
@@ -110,9 +112,14 @@
       welcomeText.innerText = `¡Bienvenido/a, ${name}! Elige qué te gustaría practicar`;
       nameSection.style.display = "none";
       menuSection.style.display = "block";
-      sonidoCorrecto.play(); // sonido de bienvenida tipo "acierto"
+
+      // Ocultar título e imágenes
+      mainTitle.style.display = "none";
+      mainImages.style.display = "none";
+
+      sonidoCorrecto.play();
     } else {
-      sonidoIncorrecto.play(); // si el nombre está vacío
+      sonidoIncorrecto.play();
     }
   }
 
@@ -127,12 +134,14 @@
     menuSection.style.display = "none";
     nameSection.style.display = "none";
     startButton.style.display = "inline-block";
+
+    // Volver a mostrar título e imágenes
+    mainTitle.style.display = "block";
+    mainImages.style.display = "flex";
   }
 
-  // Ejemplo: para usar sonidoLevelUp cuando suba de nivel:
-  // sonidoLevelUp.play();
+  // sonidoLevelUp.play(); // para usar cuando suba de nivel
 </script>
-
 
 </body>
 </html>
