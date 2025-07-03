@@ -64,17 +64,17 @@
 </head>
 <body>
 
-  <h1 id="mainTitle">¡A JUGAR CON EJERCICIOS EDUCATIVOS!</h1>
+  <h1 id="mainTitle">¡ A JUGAR CON EJERCICIOS EDUCATIVOS !</h1>
 
   <div class="img-container" id="mainImages">
     <img src="img/carpincho.png" alt="Carpincho" />
     <img src="img/unicornio.png" alt="Unicornio" />
   </div>
 
-  <button id="startButton" class="button">¡EMPEZAR A JUGAR!</button>
+  <button id="startButton" class="button">¡ EMPEZAR A JUGAR !</button>
 
   <div id="nameSection" style="display:none; margin-top: 20px;">
-    <p>¿CÓMO TE LLAMÁS?</p>
+    <p>¿ CÓMO TE LLAMÁS ?</p>
     <input type="text" id="playerName" placeholder="ESCRIBÍ TU NOMBRE ACÁ..." />
     <br><br>
     <button onclick="saveName()" class="button">CONTINUAR</button>
@@ -118,7 +118,7 @@
       const name = document.getElementById("playerName").value.trim();
       if (name !== "") {
         localStorage.setItem("nombreJugador", name);
-        welcomeText.innerText = `¡Bienvenido/a, ${name}! Elige qué te gustaría practicar`;
+        welcomeText.innerText = `¡ HOLA, ${name} ! ¿ QUÉ TE GUSTARÍA PRACTICAR ?`;
         nameSection.style.display = "none";
         menuSection.style.display = "block";
 
