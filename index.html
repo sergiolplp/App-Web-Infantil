@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href"./icon.ico" type="image/x-icon">
+  <link rel="apple-touch-ion" href"./icon.ico">
   <title>Portal Educativo</title>
   <style>
     body {
-      font-family: 'Comic Sans MS', cursive, sans-serif;
+      font-family: 'Fredoka', sans-serif;
       background-color: #fff8f0;
       text-align: center;
       margin: 0;
@@ -62,30 +64,30 @@
 </head>
 <body>
 
-  <h1 id="mainTitle">¡A jugar con ejercicios educativos!</h1>
+  <h1 id="mainTitle">¡A JUGAR CON EJERCICIOS EDUCATIVOS!</h1>
 
   <div class="img-container" id="mainImages">
     <img src="img/carpincho.png" alt="Carpincho" />
     <img src="img/unicornio.png" alt="Unicornio" />
   </div>
 
-  <button id="startButton" class="button">¡Empezar a jugar!</button>
+  <button id="startButton" class="button">¡EMPEZAR A JUGAR!</button>
 
   <div id="nameSection" style="display:none; margin-top: 20px;">
-    <p>¿Cómo te llamás?</p>
+    <p>¿CÓMO TE LLAMÁS?</p>
     <input type="text" id="playerName" placeholder="Escribí tu nombre..." />
     <br><br>
-    <button onclick="saveName()" class="button">Continuar</button>
+    <button onclick="saveName()" class="button">CONTINUAR</button>
   </div>
 
   <div id="menuSection" style="display:none;">
     <h1 id="welcomeText"></h1>
-    <button class="button" onclick="goTo('matematicas')">Matemáticas</button><br>
-    <button class="button" onclick="goTo('lengua')">Prácticas del lenguaje</button><br>
-    <button class="button" onclick="goTo('sociales')">Ciencias sociales</button><br>
-    <button class="button" onclick="goTo('naturales')">Ciencias naturales</button><br>
-    <button class="button" onclick="goTo('ingles')">Inglés</button><br>
-    <button class="button orange-button" onclick="goBack()">Volver</button>
+    <button class="button" onclick="goTo('matematicas')">MATEMÁTICAS</button><br>
+    <button class="button" onclick="goTo('lengua')">PRÁCTICAS DEL LUENGUAJE</button><br>
+    <button class="button" onclick="goTo('sociales')">CIENCIAS SOCIALES</button><br>
+    <button class="button" onclick="goTo('naturales')">CIENCIAS NATURALES</button><br>
+    <button class="button" onclick="goTo('ingles')">INGLÉS</button><br>
+    <button class="button orange-button" onclick="goBack()">VOLVER</button>
   </div>
 
   <div class="footer">
