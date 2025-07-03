@@ -11,6 +11,7 @@
       text-align: center;
       margin: 0;
       padding: 0;
+      padding-bottom: 80px; /* espacio para el footer */
     }
     h1 {
       color: #663399;
@@ -43,7 +44,8 @@
     .orange-button {
       background-color: orange;
       color: white;
-      }
+      margin-bottom: 80px; /* espacio antes del footer */
+    }
     .footer {
       background-color: #ffc1e3;
       color: #333;
@@ -86,67 +88,67 @@
     <button class="button orange-button" onclick="goBack()">Volver</button>
   </div>
 
-  <div id="footer">
+  <div class="footer">
     Desarrolado por SDS. Donaciones a ALIAS: sdsproyectos
   </div>
 
   <script>
-  const startButton = document.getElementById("startButton");
-  const nameSection = document.getElementById("nameSection");
-  const menuSection = document.getElementById("menuSection");
-  const welcomeText = document.getElementById("welcomeText");
-  const mainTitle = document.getElementById("mainTitle");
-  const mainImages = document.getElementById("mainImages");
+    const startButton = document.getElementById("startButton");
+    const nameSection = document.getElementById("nameSection");
+    const menuSection = document.getElementById("menuSection");
+    const welcomeText = document.getElementById("welcomeText");
+    const mainTitle = document.getElementById("mainTitle");
+    const mainImages = document.getElementById("mainImages");
 
-  // 🎵 Cargar sonidos desde carpeta /sounds/
-  const sonidoClick = new Audio("sounds/click.wav");
-  const sonidoCorrecto = new Audio("sounds/correct.wav");
-  const sonidoIncorrecto = new Audio("sounds/wrong.wav");
-  const sonidoLevelUp = new Audio("sounds/level-up.wav");
+    // 🎵 Cargar sonidos desde carpeta /sounds/
+    const sonidoClick = new Audio("sounds/click.wav");
+    const sonidoCorrecto = new Audio("sounds/correct.wav");
+    const sonidoIncorrecto = new Audio("sounds/wrong.wav");
+    const sonidoLevelUp = new Audio("sounds/level-up.wav");
 
-  startButton.addEventListener("click", () => {
-    startButton.style.display = "none";
-    nameSection.style.display = "block";
-    sonidoClick.play();
-  });
+    startButton.addEventListener("click", () => {
+      startButton.style.display = "none";
+      nameSection.style.display = "block";
+      sonidoClick.play();
+    });
 
-  function saveName() {
-    const name = document.getElementById("playerName").value.trim();
-    if (name !== "") {
-      localStorage.setItem("nombreJugador", name);
-      welcomeText.innerText = `¡Bienvenido/a, ${name}! Elige qué te gustaría practicar`;
-      nameSection.style.display = "none";
-      menuSection.style.display = "block";
+    function saveName() {
+      const name = document.getElementById("playerName").value.trim();
+      if (name !== "") {
+        localStorage.setItem("nombreJugador", name);
+        welcomeText.innerText = `¡Bienvenido/a, ${name}! Elige qué te gustaría practicar`;
+        nameSection.style.display = "none";
+        menuSection.style.display = "block";
 
-      // Ocultar título e imágenes
-      mainTitle.style.display = "none";
-      mainImages.style.display = "none";
+        // Ocultar título e imágenes
+        mainTitle.style.display = "none";
+        mainImages.style.display = "none";
 
-      sonidoCorrecto.play();
-    } else {
-      sonidoIncorrecto.play();
+        sonidoCorrecto.play();
+      } else {
+        sonidoIncorrecto.play();
+      }
     }
-  }
 
-  function goTo(seccion) {
-    sonidoClick.play();
-    alert(`Vamos a la sección: ${seccion}`);
-    // window.location.href = `${seccion}.html`;
-  }
+    function goTo(seccion) {
+      sonidoClick.play();
+      alert(`Vamos a la sección: ${seccion}`);
+      // window.location.href = `${seccion}.html`;
+    }
 
-  function goBack() {
-    sonidoClick.play();
-    menuSection.style.display = "none";
-    nameSection.style.display = "none";
-    startButton.style.display = "inline-block";
+    function goBack() {
+      sonidoClick.play();
+      menuSection.style.display = "none";
+      nameSection.style.display = "none";
+      startButton.style.display = "inline-block";
 
-    // Volver a mostrar título e imágenes
-    mainTitle.style.display = "block";
-    mainImages.style.display = "flex";
-  }
+      // Volver a mostrar título e imágenes
+      mainTitle.style.display = "block";
+      mainImages.style.display = "flex";
+    }
 
-  // sonidoLevelUp.play(); // para usar cuando suba de nivel
-</script>
+    // sonidoLevelUp.play(); // para usar cuando suba de nivel
+  </script>
 
 </body>
 </html>
