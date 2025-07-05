@@ -157,6 +157,18 @@ function goTo(seccion) {
     }
 
     // sonidoLevelUp.play(); // para usar cuando suba de nivel
+
+window.addEventListener("load", () => {
+  const nombreGuardado = localStorage.getItem("nombreJugador");
+  if (location.hash === "#menu" && nombreGuardado) {
+    document.getElementById("mainTitle").style.display = "none";
+    document.getElementById("mainImages").style.display = "none";
+    document.getElementById("startButton").style.display = "none";
+    document.getElementById("welcomeText").innerText = `¡Bienvenido/a, ${nombreGuardado}! Elige qué te gustaría practicar`;
+    document.getElementById("menuSection").style.display = "block";
+  }
+});
+
   </script>
 
 </body>
