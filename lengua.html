@@ -101,112 +101,106 @@
 
   <!-- Lógica -->
   <script>
-    const bancoPreguntas = [
-      { texto: "¿CUÁL ESTÁ BIEN ESCRITA?", opciones: ["juan", "Juan", "JUAN"], correcta: "Juan" },
-      { texto: "¿CÓMO SE ESCRIBE?", opciones: ["baca", "vaca", "vaka"], correcta: "vaca" },
-      { texto: "¿CUÁL ES CORRECTA?", opciones: ["cielo", "sielo", "zielo"], correcta: "cielo" },
-      { texto: "¿CÓMO SE ESCRIBE?", opciones: ["girasol", "jirasol", "hirasol"], correcta: "girasol" },
-      { texto: "¿CUÁL LLEVA H?", opciones: ["ola", "hola", "olaa"], correcta: "hola" },
-      { texto: "¿CUÁL ES UN SUSTANTIVO PROPIO?", opciones: ["Perro", "María", "silla"], correcta: "María" },
-      { texto: "¿CUÁL ES UN SUSTANTIVO COMÚN?", opciones: ["niña", "Lucía", "Mar del Plata"], correcta: "niña" },
-      { texto: "¿CUÁL ES PLURAL?", opciones: ["perros", "perro", "perra"], correcta: "perros" }
-    ];
+  const bancoPreguntas = [
+    { texto: "¿CUÁL ESTÁ BIEN ESCRITA?", opciones: ["juan", "Juan", "JUAN"], correcta: "Juan" },
+    { texto: "¿CÓMO SE ESCRIBE?", opciones: ["baca", "vaca", "vaka"], correcta: "vaca" },
+    { texto: "¿CUÁL ES CORRECTA?", opciones: ["cielo", "sielo", "zielo"], correcta: "cielo" },
+    { texto: "¿CÓMO SE ESCRIBE?", opciones: ["girasol", "jirasol", "hirasol"], correcta: "girasol" },
+    { texto: "¿CUÁL LLEVA H?", opciones: ["ola", "hola", "olaa"], correcta: "hola" },
+    { texto: "¿CUÁL ES UN SUSTANTIVO PROPIO?", opciones: ["Perro", "María", "silla"], correcta: "María" },
+    { texto: "¿CUÁL ES UN SUSTANTIVO COMÚN?", opciones: ["niña", "Lucía", "Mar del Plata"], correcta: "niña" },
+    { texto: "¿CUÁL ES PLURAL?", opciones: ["perros", "perro", "perra"], correcta: "perros" }
+  ];
 
-    let nombreJugador = localStorage.getItem("nombreJugador") || "INVITADO";
-    let nivel = 1;
-    let aciertosTotales = 0;
-    let progreso = {};
+  let nombreJugador = localStorage.getItem("nombreJugador") || "INVITADO";
+  let nivel = 1;
+  let aciertosTotales = 0;
+  let progreso = {};
 
-    document.addEventListener("DOMContentLoaded", () => {
-      cargarProgreso();
-      actualizarNivelUI();
-      nuevaPregunta();
-    });
+  document.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    actualizarNivelUI();
+    nuevaPregunta();
+  });
 
-    function cargarProgreso() {
-      const datos = localStorage.getItem("progresoUsuarios");
-      if (datos) {
-        progreso = JSON.parse(datos);
-      }
-
-      if (!progreso[nombreJugador]) {
-        progreso[nombreJugador] = {};
-      }
-
-      nivel = progreso[nombreJugador]["lengua"] || 1;
-      aciertosTotales = (nivel - 1) * 10;
+  function cargarProgreso() {
+    const datos = localStorage.getItem("progresoUsuarios");
+    if (datos) {
+      progreso = JSON.parse(datos);
     }
 
-    function guardarProgreso() {
-      progreso[nombreJugador]["lengua"] = nivel;
-      localStorage.setItem("progresoUsuarios", JSON.stringify(progreso));
+    if (!progreso[nombreJugador]) {
+      progreso[nombreJugador] = {};
     }
 
-    function nuevaPregunta() {
-      const pregunta = bancoPreguntas[Math.floor(Math.random() * bancoPreguntas.length)];
-      document.getElementById("pregunta").innerText = pregunta.texto;
-
-      const respuestas = document.getElementById("respuestas");
-      respuestas.innerHTML = "";
-
-      pregunta.opciones.sort(() => Math.random() - 0.5).forEach(op => {
-        const btn = document.createElement("button");
-        btn.innerText = op;
-        btn.className = "button";
-        btn.onclick = () => verificarRespuesta(op, pregunta.correcta);
-        respuestas.appendChild(btn);
-      });
-    }
-
-    function verificarRespuesta(seleccionado, correcto) {
-      if (seleccionado === correcto) {
-        sonidoCorrecto.play();
-        aciertosTotales++;
-        if (aciertosTotales % 10 === 0) {
-          nivel++;
-          sonidoLevelUp.play();
-          guardarProgreso();
-        }
-        actualizarNivelUI();
-      } else {
-        sonidoIncorrecto.play();
-      }
-      setTimeout(nuevaPregunta, 800);
-      const feedback = document.getElementById("feedback");
-
-if (seleccionado === correcto) {
-  feedback.textContent = "¡Muy bien!";
-  feedback.style.color = "green";
-  sonidoCorrecto.play();
-  aciertosTotales++;
-  if (aciertosTotales % 10 === 0) {
-    nivel++;
-    sonidoLevelUp.play();
-    guardarProgreso();
+    nivel = progreso[nombreJugador]["lengua"] || 1;
+    aciertosTotales = (nivel - 1) * 10;
   }
-  actualizarNivelUI();
-} else {
-  feedback.textContent = "Ups... Intentá otra vez";
-  feedback.style.color = "red";
-  sonidoIncorrecto.play();
-}
 
-setTimeout(() => {
-  feedback.textContent = "";
-  nuevaPregunta();
-}, 1500);
-    }
-feedback.className = "animate__animated animate__fadeIn";
-    function actualizarNivelUI() {
-      document.getElementById("nivel-numero").innerText = nivel;
-      document.getElementById("barra-nivel").style.width = `${(aciertosTotales % 10) * 10}%`;
+  function guardarProgreso() {
+    progreso[nombreJugador]["lengua"] = nivel;
+    localStorage.setItem("progresoUsuarios", JSON.stringify(progreso));
+  }
+
+  function nuevaPregunta() {
+    const pregunta = bancoPreguntas[Math.floor(Math.random() * bancoPreguntas.length)];
+    document.getElementById("pregunta").innerText = pregunta.texto;
+
+    const respuestas = document.getElementById("respuestas");
+    respuestas.innerHTML = "";
+
+    pregunta.opciones.sort(() => Math.random() - 0.5).forEach(op => {
+      const btn = document.createElement("button");
+      btn.innerText = op;
+      btn.className = "button";
+      btn.onclick = () => verificarRespuesta(op, pregunta.correcta);
+      respuestas.appendChild(btn);
+    });
+  }
+
+  function verificarRespuesta(seleccionado, correcto) {
+    const feedback = document.getElementById("feedback");
+
+    // Desactivar botones para evitar doble clic
+    document.querySelectorAll("#respuestas button").forEach(btn => btn.disabled = true);
+
+    if (seleccionado === correcto) {
+      feedback.textContent = "¡Muy bien!";
+      feedback.style.color = "green";
+      feedback.className = "animate__animated animate__fadeIn";
+      sonidoCorrecto.play();
+      aciertosTotales++;
+
+      if (aciertosTotales % 10 === 0) {
+        nivel++;
+        sonidoLevelUp.play();
+        guardarProgreso();
+      }
+
+      actualizarNivelUI();
+    } else {
+      feedback.textContent = "Ups... Intentá otra vez";
+      feedback.style.color = "red";
+      feedback.className = "animate__animated animate__shakeX";
+      sonidoIncorrecto.play();
     }
 
-    function volver() {
-      sonidoClick.play();
-      window.location.href = "index.html#menu";
-    }
-  </script>
+    setTimeout(() => {
+      feedback.textContent = "";
+      nuevaPregunta();
+    }, 1500);
+  }
+
+  function actualizarNivelUI() {
+    document.getElementById("nivel-numero").innerText = nivel;
+    document.getElementById("barra-nivel").style.width = `${(aciertosTotales % 10) * 10}%`;
+  }
+
+  function volver() {
+    sonidoClick.play();
+    window.location.href = "index.html#menu";
+  }
+</script>
 
 </body>
 </html>
