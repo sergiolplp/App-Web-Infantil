@@ -143,24 +143,26 @@
   }
 
   function nuevaPregunta() {
-    const a = Math.floor(Math.random() * 10);
-    const b = Math.floor(Math.random() * 10);
-    const resultado = a + b;
-    const opciones = [resultado, resultado + 1, resultado - 1].sort(() => Math.random() - 0.5);
+  // Quitar foco de cualquier botón previamente presionado
+  document.activeElement.blur();
 
-    document.getElementById("pregunta").innerText = `¿CUÁNTO ES ${a} + ${b}?`;
-    const respuestas = document.getElementById("respuestas");
-    respuestas.innerHTML = "";
+  const a = Math.floor(Math.random() * 10);
+  const b = Math.floor(Math.random() * 10);
+  const resultado = a + b;
+  const opciones = [resultado, resultado + 1, resultado - 1].sort(() => Math.random() - 0.5);
 
-    opciones.forEach(op => {
-  const btn = document.createElement("button");
-  btn.innerText = op;
-  btn.className = "button";
-  btn.onclick = () => verificarRespuesta(op, resultado); // o correcta en lengua
-  btn.onmousedown = (e) => e.preventDefault(); // Evita que quede con focus
-  respuestas.appendChild(btn);
-});
-  }
+  document.getElementById("pregunta").innerText = `¿CUÁNTO ES ${a} + ${b}?`;
+  const respuestas = document.getElementById("respuestas");
+  respuestas.innerHTML = "";
+
+  opciones.forEach(op => {
+    const btn = document.createElement("button");
+    btn.innerText = op;
+    btn.className = "button";
+    btn.onclick = () => verificarRespuesta(op, resultado);
+    respuestas.appendChild(btn);
+  });
+}
 
   function verificarRespuesta(seleccionado, correcto) {
     const feedback = document.getElementById("feedback");
