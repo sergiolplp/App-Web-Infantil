@@ -143,20 +143,21 @@
   }
 
   function nuevaPregunta() {
-    const pregunta = bancoPreguntas[Math.floor(Math.random() * bancoPreguntas.length)];
-    document.getElementById("pregunta").innerText = pregunta.texto;
+  const pregunta = bancoPreguntas[Math.floor(Math.random() * bancoPreguntas.length)];
+  document.getElementById("pregunta").innerText = pregunta.texto;
 
-    const respuestas = document.getElementById("respuestas");
-    respuestas.innerHTML = "";
+  const respuestas = document.getElementById("respuestas");
+  respuestas.innerHTML = "";
 
-    pregunta.opciones.sort(() => Math.random() - 0.5).forEach(op => {
-      const btn = document.createElement("button");
-      btn.innerText = op;
-      btn.className = "button";
-      btn.onclick = () => verificarRespuesta(op, pregunta.correcta);
-      respuestas.appendChild(btn);
-    });
-  }
+  pregunta.opciones.sort(() => Math.random() - 0.5).forEach(op => {
+    const btn = document.createElement("button");
+    btn.innerText = op;
+    btn.className = "button";
+    btn.onclick = () => verificarRespuesta(op, pregunta.correcta);
+    btn.onmousedown = (e) => e.preventDefault(); // 👈 Esto evita que el botón quede visualmente marcado
+    respuestas.appendChild(btn);
+  });
+}
 
   function verificarRespuesta(seleccionado, correcto) {
     const feedback = document.getElementById("feedback");
