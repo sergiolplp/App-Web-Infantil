@@ -111,106 +111,98 @@
   </script>
 
   <!-- Lógica -->
-  <script>
-    let nombreJugador = localStorage.getItem("nombreJugador") || "INVITADO";
-    let nivel = 1;
-    let aciertosTotales = 0;
-    let progreso = {};
+<script>
+  let nombreJugador = localStorage.getItem("nombreJugador") || "INVITADO";
+  let nivel = 1;
+  let aciertosTotales = 0;
+  let progreso = {};
 
-    document.addEventListener("DOMContentLoaded", () => {
-      cargarProgreso();
-      actualizarNivelUI();
-      nuevaPregunta();
-    });
+  document.addEventListener("DOMContentLoaded", () => {
+    cargarProgreso();
+    actualizarNivelUI();
+    nuevaPregunta();
+  });
 
-    function cargarProgreso() {
-      const datos = localStorage.getItem("progresoUsuarios");
-      if (datos) {
-        progreso = JSON.parse(datos);
-      }
-
-      if (!progreso[nombreJugador]) {
-        progreso[nombreJugador] = {};
-      }
-
-      nivel = progreso[nombreJugador]["matematicas"] || 1;
-      aciertosTotales = (nivel - 1) * 10;
+  function cargarProgreso() {
+    const datos = localStorage.getItem("progresoUsuarios");
+    if (datos) {
+      progreso = JSON.parse(datos);
     }
 
-    function guardarProgreso() {
-      progreso[nombreJugador]["matematicas"] = nivel;
-      localStorage.setItem("progresoUsuarios", JSON.stringify(progreso));
+    if (!progreso[nombreJugador]) {
+      progreso[nombreJugador] = {};
     }
 
-    function nuevaPregunta() {
-      const a = Math.floor(Math.random() * 10);
-      const b = Math.floor(Math.random() * 10);
-      const resultado = a + b;
-      const opciones = [resultado, resultado + 1, resultado - 1].sort(() => Math.random() - 0.5);
-
-      document.getElementById("pregunta").innerText = `¿CUÁNTO ES ${a} + ${b}?`;
-      const respuestas = document.getElementById("respuestas");
-      respuestas.innerHTML = "";
-
-      opciones.forEach(op => {
-        const btn = document.createElement("button");
-        btn.innerText = op;
-        btn.className = "button";
-        btn.onclick = () => verificarRespuesta(op, resultado);
-        respuestas.appendChild(btn);
-      });
-    }
-
-    function verificarRespuesta(seleccionado, correcto) {
-      if (seleccionado === correcto) {
-        sonidoCorrecto.play();
-        aciertosTotales++;
-        if (aciertosTotales % 10 === 0) {
-          nivel++;
-          sonidoLevelUp.play();
-          guardarProgreso();
-        }
-        actualizarNivelUI();
-      } else {
-        sonidoIncorrecto.play();
-      }
-      setTimeout(nuevaPregunta, 800);
-      const feedback = document.getElementById("feedback");
-
-if (seleccionado === correcto) {
-  feedback.textContent = "¡Muy bien!";
-  feedback.style.color = "green";
-  sonidoCorrecto.play();
-  aciertosTotales++;
-  if (aciertosTotales % 10 === 0) {
-    nivel++;
-    sonidoLevelUp.play();
-    guardarProgreso();
+    nivel = progreso[nombreJugador]["matematicas"] || 1;
+    aciertosTotales = (nivel - 1) * 10;
   }
-  actualizarNivelUI();
-} else {
-  feedback.textContent = "Ups... Intentá otra vez";
-  feedback.style.color = "red";
-  sonidoIncorrecto.play();
-}
 
-setTimeout(() => {
-  feedback.textContent = "";
-  nuevaPregunta();
-}, 1500);
-    }
-feedback.className = "animate__animated animate__fadeIn";
+  function guardarProgreso() {
+    progreso[nombreJugador]["matematicas"] = nivel;
+    localStorage.setItem("progresoUsuarios", JSON.stringify(progreso));
+  }
 
-    function actualizarNivelUI() {
-      document.getElementById("nivel-numero").innerText = nivel;
-      document.getElementById("barra-nivel").style.width = `${(aciertosTotales % 10) * 10}%`;
+  function nuevaPregunta() {
+    const a = Math.floor(Math.random() * 10);
+    const b = Math.floor(Math.random() * 10);
+    const resultado = a + b;
+    const opciones = [resultado, resultado + 1, resultado - 1].sort(() => Math.random() - 0.5);
+
+    document.getElementById("pregunta").innerText = `¿CUÁNTO ES ${a} + ${b}?`;
+    const respuestas = document.getElementById("respuestas");
+    respuestas.innerHTML = "";
+
+    opciones.forEach(op => {
+      const btn = document.createElement("button");
+      btn.innerText = op;
+      btn.className = "button";
+      btn.onclick = () => verificarRespuesta(op, resultado);
+      respuestas.appendChild(btn);
+    });
+  }
+
+  function verificarRespuesta(seleccionado, correcto) {
+    const feedback = document.getElementById("feedback");
+
+    // Desactivar botones para evitar doble clic
+    document.querySelectorAll("#respuestas button").forEach(btn => btn.disabled = true);
+
+    if (seleccionado === correcto) {
+      feedback.textContent = "¡Muy bien!";
+      feedback.style.color = "green";
+      feedback.className = "animate__animated animate__fadeIn";
+      sonidoCorrecto.play();
+      aciertosTotales++;
+
+      if (aciertosTotales % 10 === 0) {
+        nivel++;
+        sonidoLevelUp.play();
+        guardarProgreso();
+      }
+      actualizarNivelUI();
+    } else {
+      feedback.textContent = "Ups... Intentá otra vez";
+      feedback.style.color = "red";
+      feedback.className = "animate__animated animate__shakeX";
+      sonidoIncorrecto.play();
     }
 
-    function volver() {
-      sonidoClick.play();
-      window.location.href = "index.html#menu";
-    }
-  </script>
+    setTimeout(() => {
+      feedback.textContent = "";
+      nuevaPregunta();
+    }, 1500);
+  }
+
+  function actualizarNivelUI() {
+    document.getElementById("nivel-numero").innerText = nivel;
+    document.getElementById("barra-nivel").style.width = `${(aciertosTotales % 10) * 10}%`;
+  }
+
+  function volver() {
+    sonidoClick.play();
+    window.location.href = "index.html#menu";
+  }
+</script>
 
 </body>
 </html>
