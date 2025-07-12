@@ -143,6 +143,9 @@
   }
 
   function nuevaPregunta() {
+  // Antes de limpiar, quitamos el foco de cualquier botón previamente presionado
+  document.activeElement.blur();
+
   const pregunta = bancoPreguntas[Math.floor(Math.random() * bancoPreguntas.length)];
   document.getElementById("pregunta").innerText = pregunta.texto;
 
@@ -154,9 +157,9 @@
     btn.innerText = op;
     btn.className = "button";
     btn.onclick = () => verificarRespuesta(op, pregunta.correcta);
-    btn.onmousedown = (e) => e.preventDefault(); // 👈 Esto evita que el botón quede visualmente marcado
     respuestas.appendChild(btn);
   });
+}
 }
 
   function verificarRespuesta(seleccionado, correcto) {
