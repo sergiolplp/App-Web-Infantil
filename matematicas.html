@@ -2,13 +2,11 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>MATEMÁTICAS</title>
   <link rel="icon" href="./icon.ico" type="image/x-icon">
   <link rel="apple-touch-icon" href="./icon.ico">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <title>MATEMÁTICAS</title>
-  <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet">
   <style>
     body {
@@ -16,45 +14,64 @@
       background-color: #fff8f0;
       text-align: center;
       margin: 0;
-      padding: 0 10px 80px 10px;
+      padding: 0;
       text-transform: uppercase;
     }
-
-    h1, h2, p {
-      color: #663399;
+    .container {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+      padding-bottom: 70px;
     }
-
-    .button {
-      background-color: #ff69b4;
-      color: white;
+    button {
+      font-size: 1.5rem;
       padding: 15px 30px;
       margin: 10px;
       border: none;
       border-radius: 20px;
-      font-size: 18px;
+      background-color: #ff69b4;
+      color: white;
       cursor: pointer;
+      transition: background 0.3s;
     }
-
-.button:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-    .button:hover {
+    button:hover {
       background-color: #ff85c1;
     }
-
-    .orange-button {
+    .volver-btn {
       background-color: orange;
       color: white;
+      margin-top: auto;
     }
-
+    .footer {
+      background-color: #ffc1e3;
+      color: #333;
+      text-align: center;
+      padding: 10px;
+      font-size: 1rem;
+      font-style: italic;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      z-index: 999;
+    }
+    #answers button {
+      display: block;
+      width: 80%;
+      margin: 10px auto;
+    }
+    #feedback {
+      font-size: 1.3rem;
+      margin: 15px;
+      height: 2em;
+    }
     #nivel-container {
       width: 80%;
-      margin: 20px auto;
+      margin: 10px auto;
       text-align: center;
     }
-
     .barra-nivel {
       background-color: #ddd;
       border-radius: 20px;
@@ -62,167 +79,227 @@
       overflow: hidden;
       margin-top: 5px;
     }
-
-    #barra-nivel {
+    #nivel-barra {
       height: 100%;
       width: 0%;
       background-color: #8bc34a;
       transition: width 0.4s ease-in-out;
     }
-
-    .footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background-color: #ffc1e3;
-      color: #333;
-      font-size: 14px;
-      text-align: center;
-      font-style: italic;
-      padding: 10px;
-      z-index: 999;
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
 
-  <h1>¡A JUGAR CON MATEMÁTICAS!</h1>
+<div class="container" id="welcome">
+  <h1>¡LUCI, SOFI... A JUGAR CON LAS MATEMÁTICAS!</h1>
+  <button onclick="showUserSelect()">¡EMPEZAR A JUGAR!</button>
+  <button onclick="showHelp()">¿CÓMO SE RESUELVE?</button>
+</div>
 
-  <h2 id="pregunta">¿CUÁNTO ES ...?</h2>
+<div class="container hidden" id="select-user">
+  <h2>¿QUIÉN VA A JUGAR?</h2>
+  <button onclick="selectUser('Lucía')">LUCI</button>
+  <button onclick="selectUser('Sofía')">SOFI</button>
+  <button class="volver-btn" onclick="goToWelcome()">VOLVER</button>
+</div>
 
+<div class="container hidden" id="menu">
+  <h2 id="saludo">ELEGÍ UNA OPERACIÓN</h2>
+  <button onclick="startGame('+')">➕ SUMA</button>
+  <button onclick="startGame('-')">➖ RESTA</button>
+  <button onclick="startGame('*')">✖️ MULTIPLICACIÓN</button>
+  <button onclick="startGame('/')">➗ DIVISIÓN</button>
+  <button class="volver-btn" onclick="goToWelcome()">VOLVER</button>
+</div>
+
+<div class="container hidden" id="game">
+  <h2 id="question">¿CUÁNTO ES ...?</h2>
   <div id="nivel-container">
     <p>NIVEL: <span id="nivel-numero">1</span></p>
     <div class="barra-nivel">
-      <div id="barra-nivel"></div>
+      <div id="nivel-barra"></div>
     </div>
   </div>
-
-  <div id="respuestas"></div>
-  
-  <p id="feedback" style="font-size: 1.3rem; height: 2em; margin-top: 10px;"></p>
-
-  <button onclick="volver()" class="button orange-button">VOLVER</button>
-
-  <div class="footer">
-  Desarrollado con I.A.<br>
-  Donaciones al ALIAS: sergiosainz.frances GRACIAS!<br>
-  Mail: sergiosainz.proyectos@gmail.com
+  <div id="answers"></div>
+  <p id="feedback" class="animate__animated"></p>
+  <button class="volver-btn" onclick="goToMenu()">VOLVER</button>
 </div>
 
-  <!-- Sonidos -->
-  <script>
-    const sonidoClick = new Audio("sounds/click.wav");
-    const sonidoCorrecto = new Audio("sounds/correct.wav");
-    const sonidoIncorrecto = new Audio("sounds/wrong.wav");
-    const sonidoLevelUp = new Audio("sounds/level-up.wav");
-    const jsConfetti = new JSConfetti();
-  </script>
+<div class="container hidden" id="help">
+  <h2>¿CÓMO SE RESUELVE?</h2>
+  <button onclick="showHelpText('sumar')">➕ SUMA</button>
+  <button onclick="showHelpText('restar')">➖ RESTA</button>
+  <button onclick="showHelpText('multiplicar')">✖️ MULTIPLICACIÓN</button>
+  <button onclick="showHelpText('dividir')">➗ DIVISIÓN</button>
+  <div id="help-text" style="margin-top: 20px; font-size: 1.2rem;"></div>
+  <button class="volver-btn" onclick="goToWelcome()">VOLVER</button>
+</div>
 
-  <!-- Lógica -->
+<footer class="footer">
+  Desarrollado con I.A. | Alias: sergiosainz.frances | Mail: sergiosainz.proyectos@gmail.com
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
 <script>
-  let nombreJugador = localStorage.getItem("nombreJugador") || "INVITADO";
-  let nivel = 1;
-  let aciertosTotales = 0;
-  let progreso = {};
+const sounds = {
+  correct: new Audio("sounds/correct.wav"),
+  wrong: new Audio("sounds/wrong.wav"),
+  click: new Audio("sounds/click.wav"),
+  levelUp: new Audio("sounds/level-up.wav")
+};
+const jsConfetti = new JSConfetti();
 
-  document.addEventListener("DOMContentLoaded", () => {
-    cargarProgreso();
-    actualizarNivelUI();
-    nuevaPregunta();
+let currentOp = '+';
+let correctAnswer = 0;
+let nivel = 1;
+let aciertos = 0;
+let nombreJugador = '';
+const aciertosNivel = 10;
+
+function showUserSelect() {
+  hideAll();
+  document.getElementById('select-user').classList.remove('hidden');
+  sounds.click.play();
+}
+
+function selectUser(nombre) {
+  nombreJugador = nombre;
+  const guardado = JSON.parse(localStorage.getItem(`progreso_${nombre}`));
+  if (guardado) {
+    nivel = guardado.nivel;
+    aciertos = guardado.aciertos;
+  } else {
+    nivel = 1;
+    aciertos = 0;
+  }
+  actualizarNivel();
+  document.getElementById('saludo').innerText = `¡HOLA ${nombre.toUpperCase()}!`;
+  hideAll();
+  document.getElementById('menu').classList.remove('hidden');
+  sounds.click.play();
+}
+
+function startGame(op) {
+  currentOp = op;
+  hideAll();
+  document.getElementById('game').classList.remove('hidden');
+  generateQuestion();
+  sounds.click.play();
+}
+
+function goToWelcome() {
+  hideAll();
+  document.getElementById('welcome').classList.remove('hidden');
+  sounds.click.play();
+}
+
+function goToMenu() {
+  hideAll();
+  document.getElementById('menu').classList.remove('hidden');
+  sounds.click.play();
+}
+
+function hideAll() {
+  ['welcome','select-user','menu','game','help'].forEach(id => {
+    document.getElementById(id).classList.add('hidden');
   });
+}
 
-  function cargarProgreso() {
-    const datos = localStorage.getItem("progresoUsuarios");
-    if (datos) {
-      progreso = JSON.parse(datos);
-    }
-
-    if (!progreso[nombreJugador]) {
-      progreso[nombreJugador] = {};
-    }
-
-    nivel = progreso[nombreJugador]["matematicas"] || 1;
-    aciertosTotales = (nivel - 1) * 10;
+function generateQuestion() {
+  let a = Math.floor(Math.random() * 10) + 1;
+  let b = Math.floor(Math.random() * 10) + 1;
+  if (currentOp === '-' && b > a) [a, b] = [b, a];
+  if (currentOp === '*') correctAnswer = a * b;
+  else if (currentOp === '/') {
+    correctAnswer = a;
+    b = Math.floor(Math.random() * 9) + 1;
+    a = correctAnswer * b;
   }
+  else correctAnswer = a + b;
+  if (currentOp === '-') correctAnswer = a - b;
 
-  function guardarProgreso() {
-    progreso[nombreJugador]["matematicas"] = nivel;
-    localStorage.setItem("progresoUsuarios", JSON.stringify(progreso));
-  }
-
-  function nuevaPregunta() {
-  // Quitar foco de cualquier botón previamente presionado
-  document.activeElement.blur();
-
-  const a = Math.floor(Math.random() * 10);
-  const b = Math.floor(Math.random() * 10);
-  const resultado = a + b;
-  const opciones = [resultado, resultado + 1, resultado - 1].sort(() => Math.random() - 0.5);
-
-  document.getElementById("pregunta").innerText = `¿CUÁNTO ES ${a} + ${b}?`;
-  const respuestas = document.getElementById("respuestas");
+  document.getElementById('question').innerText = `¿CUÁNTO ES ${a} ${currentOp} ${b}?`;
+  const respuestas = document.getElementById('answers');
   respuestas.innerHTML = "";
-
+  let opciones = [correctAnswer];
+  while (opciones.length < 3) {
+    let o = correctAnswer + Math.floor(Math.random() * 10) - 5;
+    if (o >= 0 && !opciones.includes(o)) opciones.push(o);
+  }
+  opciones.sort(() => Math.random() - 0.5);
   opciones.forEach(op => {
     const btn = document.createElement("button");
     btn.innerText = op;
-    btn.className = "button";
-    btn.onclick = () => verificarRespuesta(op, resultado);
+    btn.onclick = () => checkAnswer(op);
     respuestas.appendChild(btn);
   });
 }
 
-  function verificarRespuesta(seleccionado, correcto) {
-  const feedback = document.getElementById("feedback");
-
-  // Desactivar botones para evitar doble clic
-  document.querySelectorAll("#respuestas button").forEach(btn => btn.disabled = true);
-
-  if (seleccionado === correcto) {
-    aciertosTotales++;
-
-    if (aciertosTotales % 10 === 0) {
+function checkAnswer(seleccionado) {
+  const fb = document.getElementById('feedback');
+  document.querySelectorAll('#answers button').forEach(btn => btn.disabled = true);
+  if (seleccionado === correctAnswer) {
+    aciertos++;
+    fb.innerText = "¡MUY BIEN!";
+    fb.style.color = "green";
+    fb.className = "animate__animated animate__fadeIn";
+    sounds.correct.play();
+    if (aciertos === aciertosNivel) {
       nivel++;
-      sonidoLevelUp.play();
+      aciertos = 0;
+      fb.innerText = `¡SUBISTE DE NIVEL, ${nombreJugador.toUpperCase()}!`;
+      fb.style.color = "#663399";
+      fb.className = "animate__animated animate__heartBeat";
+      sounds.levelUp.play();
       jsConfetti.addConfetti();
-
-      feedback.textContent = `SUBISTE DE NIVEL, ${nombreJugador.toUpperCase()}!`;
-      feedback.style.color = "#663399";
-      feedback.className = "animate__animated animate__heartBeat";
-
-      guardarProgreso();
-    } else {
-      feedback.textContent = "¡Muy bien!";
-      feedback.style.color = "green";
-      feedback.className = "animate__animated animate__fadeIn";
-      sonidoCorrecto.play();
     }
-
-    actualizarNivelUI();
+    guardarProgreso();
+    actualizarNivel();
   } else {
-    feedback.textContent = "Ups... Intentá otra vez";
-    feedback.style.color = "red";
-    feedback.className = "animate__animated animate__shakeX";
-    sonidoIncorrecto.play();
+    fb.innerText = "UPS... INTENTÁ DE NUEVO";
+    fb.style.color = "red";
+    fb.className = "animate__animated animate__shakeX";
+    sounds.wrong.play();
   }
-
   setTimeout(() => {
-    feedback.textContent = "";
-    nuevaPregunta();
-  }, 4000);
+    fb.innerText = "";
+    generateQuestion();
+  }, 3000);
 }
 
-  function actualizarNivelUI() {
-    document.getElementById("nivel-numero").innerText = nivel;
-    document.getElementById("barra-nivel").style.width = `${(aciertosTotales % 10) * 10}%`;
-  }
+function actualizarNivel() {
+  document.getElementById('nivel-numero').innerText = nivel;
+  document.getElementById('nivel-barra').style.width = `${(aciertos / aciertosNivel) * 100}%`;
+}
 
-  function volver() {
-    sonidoClick.play();
-    window.location.href = "index.html#menu";
+function guardarProgreso() {
+  if (!nombreJugador) return;
+  localStorage.setItem(`progreso_${nombreJugador}`, JSON.stringify({ nivel, aciertos }));
+}
+
+function showHelp() {
+  hideAll();
+  document.getElementById('help').classList.remove('hidden');
+  document.getElementById('help-text').innerHTML = '';
+  sounds.click.play();
+}
+
+function showHelpText(tipo) {
+  let texto = '';
+  if (tipo === 'sumar') {
+    texto = "SUMAR ES JUNTAR. SI TENÉS 2 BRÓCOLIS Y TE DAN 3 MÁS, TENÉS 5. 🥦🥦➕🥦🥦🥦=🥦🥦🥦🥦🥦";
+  } else if (tipo === 'restar') {
+    texto = "RESTAR ES SACAR. SI TENÉS 3 CARAMELOS Y TE COMÉS 2, TE QUEDA 1. 🍬🍬🍬➖🍬🍬=🍬";
+  } else if (tipo === 'multiplicar') {
+    texto = "MULTIPLICAR ES REPETIR. 3 GRUPOS CON 2 COSAS CADA UNO SON 6 EN TOTAL. 🍎🍎 🍎🍎 🍎🍎 = 6";
+  } else if (tipo === 'dividir') {
+    texto = "DIVIDIR ES REPARTIR. SI TENÉS 6 GALLETITAS Y LAS COMPARTÍS ENTRE 3, A CADA UNA LE TOCA 2 🍪🍪🍪🍪🍪🍪 ➗ 3 = 🍪🍪";
   }
+  document.getElementById('help-text').innerText = texto;
+  sounds.click.play();
+}
 </script>
-
 </body>
 </html>
