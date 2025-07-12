@@ -15,7 +15,7 @@
   background-color: #fff8f0;
   text-align: center;
   margin: 0;
-  padding: 0 10px 150px 10px; /* ⬅️ Espacio para que no lo tape el footer */
+  padding: 0 10px 30px 10px; /* ⬅️ menos padding inferior */
   text-transform: uppercase;
 }
 
@@ -46,7 +46,7 @@
   .orange-button {
     background-color: orange;
     color: white;
-    margin-bottom: 80px; /* ⬅️ espacio extra para evitar que lo tape el footer */
+    margin-bottom: 60px; /* ⬅️ espacio extra para evitar que lo tape el footer */
   }
 
   #nivel-container {
@@ -71,18 +71,17 @@
   }
 
   .footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #ffc1e3;
-    color: #333;
-    font-size: 14px;
-    text-align: center;
-    font-style: italic;
-    padding: 10px;
-    z-index: 999;
-  }
+  background-color: #ffc1e3;
+  color: #333;
+  text-align: center;
+  padding: 20px 10px;
+  font-size: 14px;
+  font-style: italic;
+  width: 100%;
+  /* ✅ Eliminá estas líneas para que el footer no se superponga */
+  /* position: fixed; */
+  /* bottom: 0; */
+}
 </style>
 </head>
 <body>
