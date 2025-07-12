@@ -176,6 +176,7 @@
 
   if (seleccionado === correcto) {
     aciertosTotales++;
+
     if (aciertosTotales % 10 === 0) {
       nivel++;
       sonidoLevelUp.play();
@@ -206,20 +207,6 @@
     nuevaPregunta();
   }, 1500);
 }
-
-      actualizarNivelUI();
-    } else {
-      feedback.textContent = "Ups... Intentá otra vez";
-      feedback.style.color = "red";
-      feedback.className = "animate__animated animate__shakeX";
-      sonidoIncorrecto.play();
-    }
-
-    setTimeout(() => {
-      feedback.textContent = "";
-      nuevaPregunta();
-    }, 1500);
-  }
 
   function actualizarNivelUI() {
     document.getElementById("nivel-numero").innerText = nivel;
