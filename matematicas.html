@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <link rel="icon" href"./icon.ico" type="image/x-icon">
   <link rel="apple-touch-ion" href"./icon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
   <title>MATEMÁTICAS</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet">
   <style>
@@ -92,6 +93,8 @@
   </div>
 
   <div id="respuestas"></div>
+  
+  <p id="feedback" style="font-size: 1.3rem; height: 2em; margin-top: 10px;"></p>
 
   <button onclick="volver()" class="button orange-button">VOLVER</button>
 
@@ -172,7 +175,31 @@
         sonidoIncorrecto.play();
       }
       setTimeout(nuevaPregunta, 800);
+      const feedback = document.getElementById("feedback");
+
+if (seleccionado === correcto) {
+  feedback.textContent = "¡Muy bien!";
+  feedback.style.color = "green";
+  sonidoCorrecto.play();
+  aciertosTotales++;
+  if (aciertosTotales % 10 === 0) {
+    nivel++;
+    sonidoLevelUp.play();
+    guardarProgreso();
+  }
+  actualizarNivelUI();
+} else {
+  feedback.textContent = "Ups... Intentá otra vez";
+  feedback.style.color = "red";
+  sonidoIncorrecto.play();
+}
+
+setTimeout(() => {
+  feedback.textContent = "";
+  nuevaPregunta();
+}, 1500);
     }
+feedback.className = "animate__animated animate__fadeIn";
 
     function actualizarNivelUI() {
       document.getElementById("nivel-numero").innerText = nivel;
