@@ -153,12 +153,13 @@
     respuestas.innerHTML = "";
 
     opciones.forEach(op => {
-      const btn = document.createElement("button");
-      btn.innerText = op;
-      btn.className = "button";
-      btn.onclick = () => verificarRespuesta(op, resultado);
-      respuestas.appendChild(btn);
-    });
+  const btn = document.createElement("button");
+  btn.innerText = op;
+  btn.className = "button";
+  btn.onclick = () => verificarRespuesta(op, resultado); // o correcta en lengua
+  btn.onmousedown = (e) => e.preventDefault(); // Evita que quede con focus
+  respuestas.appendChild(btn);
+});
   }
 
   function verificarRespuesta(seleccionado, correcto) {
